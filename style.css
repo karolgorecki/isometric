@@ -1,0 +1,113 @@
+body {
+  counter-reset: trees;
+  margin: 0 auto;
+  background: #444;
+}
+
+/* INFO
+=========================================================*/
+.info {
+  pointer-events: none;
+  color: #fff;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  margin: 0 auto;
+  font: bold 12px sans-serif;
+  text-align: center;
+  background: rgba(0,0,0,.2);
+}
+/* Add the calculations */
+.info::after {
+  color: #fff;
+  font-size: 12px;
+  white-space: pre;
+  content: "Trees: " counter(trees) "\AMoney: " counter(money) "€\A\A";
+}
+
+/* AREA
+=========================================================*/
+.area {
+  counter-reset: money 500;
+  position: absolute;
+  width: 300px;
+  top: -50px;
+  left: 50%;
+  height: 300px;
+  transform: rotateX(60deg) rotateZ(45deg) translateX(40%) translateY(110%);
+  border: 5px solid #222;
+  box-shadow: 10px 20px 50px rgba(0,0,0,.4);
+  background: url(http://texturelib.com/Textures/ground/stone%20ground/ground_stone_ground_0002_02_preview.jpg);
+}
+
+/* FIELD
+=========================================================*/
+/* Field that has no tree */
+.field {
+  display: block;
+  width: 32%;
+  position: relative;
+  margin: 1% 0 0 1%;
+  float: left;
+  height: 32%;
+  background: rgba(0,0,0,.2);
+  cursor: pointer;
+}
+
+/* When adding a tree */
+.field:hover {
+  background: rgba(0,255,0,.4);
+  z-index: 2; /* Move to front the field - more visibility when removing a tree */
+  cursor: copy;
+}
+
+/* Style the tree holder (fix the perspective)
+   We can't use :after or :before - label doesn't support it
+*/
+.field > i {
+  transform: rotateX(-31deg) rotateY(-32deg) rotateZ(-55deg);
+  position: absolute;
+  top: 20px;
+  left: 100px;
+  pointer-events: none;
+}
+
+/* TREE STATES & INTERACTIONS
+=========================================================*/
+/* Hack for hidding the input.
+   We can't use 'display: none' - it will break the counter */
+input {
+  position: absolute;
+  left: -9999px;
+}
+
+/* Field not there yet */
+input:checked + .field > i,
+.field:hover > i {
+  content: '🎄';
+  position: absolute;
+  width: 200px;
+  height: 200px;
+  left: -90%;
+  top: -100%;
+  background: url(http://briancarper.net/pixel/tree2.png) no-repeat;
+  background-size: 190px;
+  opacity: .6;
+}
+
+/* Field and i that has tree */
+input:checked + .field {
+  counter-increment: money -10;
+  background: url(http://texturelib.com/Textures/grass/grass/grass_grass_0118_02_preview.jpg);
+}
+/* Field and i that has tree */
+input:checked + .field > i {
+    counter-increment: trees;
+    opacity: 1 !important;
+}
+
+/* Removing tree */
+input:checked + .field:hover {
+  background: rgba(255,0,0,.3) !important;
+  cursor: not-allowed;
+}
